@@ -1,20 +1,25 @@
 # bss-mcp
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+![Python Versions (officially) supported](https://img.shields.io/pypi/pyversions/bss-mcp.svg)
+![Pypi status badge](https://img.shields.io/pypi/v/bss-mcp)
 ![Unittests status badge](https://github.com/Hochfrequenz/bss-mcp/workflows/Unittests/badge.svg)
 ![Coverage status badge](https://github.com/Hochfrequenz/bss-mcp/workflows/Coverage/badge.svg)
 ![Linting status badge](https://github.com/Hochfrequenz/bss-mcp/workflows/Linting/badge.svg)
 ![Black status badge](https://github.com/Hochfrequenz/bss-mcp/workflows/Formatting/badge.svg)
 
-An [MCP](https://modelcontextprotocol.io/) server wrapping [`bssclient`](https://github.com/Hochfrequenz/bssclient.py) — read-only debug tooling for the Basic Supply Service (BSS).
+An [MCP](https://modelcontextprotocol.io/) server wrapping [`bssclient`](https://github.com/Hochfrequenz/bssclient.py), exposing read-only BSS investigation-order data to AI assistants (e.g. Claude Desktop) for debugging.
+
+Requires **Python 3.11+**.
 
 ## Tools
 
 | Tool | Description |
 |---|---|
-| `get_ermittlungsauftraege` | List investigation orders (`limit`, `offset`) |
+| `get_ermittlungsauftraege` | List investigation orders (`limit`, `offset`; `limit=0` uses the server default) |
 | `get_ermittlungsauftraege_by_malo` | Investigation orders for a Marktlokation ID |
 | `get_aufgabe_stats` | Task status statistics across all Aufgaben types |
-| `get_all_ermittlungsauftraege` | All investigation orders via paginated fetch |
+| `get_all_ermittlungsauftraege` | Fetches all investigation orders by iterating pages (`package_size` controls page size, default 100) |
 
 ## Installation
 
@@ -22,7 +27,7 @@ An [MCP](https://modelcontextprotocol.io/) server wrapping [`bssclient`](https:/
 pip install bss-mcp
 ```
 
-For use with [Claude Desktop](https://claude.ai/download) or another MCP client, install into the same Python environment the client will use to launch the server, or use `pipx`:
+For use with [Claude Desktop](https://claude.ai/download) or another MCP client, `pipx` installs the server as a standalone executable:
 
 ```bash
 pipx install bss-mcp
@@ -30,7 +35,7 @@ pipx install bss-mcp
 
 ## Configuration
 
-Set environment variables (or place them in a `.env` file):
+Set environment variables or place them in a `.env` file in the working directory from which the MCP server is launched (for Claude Desktop this is typically the user's home directory):
 
 | Variable | Required | Description |
 |---|---|---|
@@ -50,7 +55,7 @@ Run the server directly:
 bss-mcp
 ```
 
-Or add to your MCP client config (e.g. Claude Desktop):
+Or add to your MCP client config (e.g. Claude Desktop). Use the full path to the executable if `bss-mcp` is not on the PATH seen by the client:
 
 ```json
 {
@@ -77,6 +82,5 @@ tox -e tests       # run tests
 tox -e type_check  # mypy --strict
 tox -e linting     # pylint
 tox -e coverage    # coverage ≥ 80 %
+tox -e formatting  # black + isort
 ```
-
-The BSS client library is provided by [`bssclient`](https://github.com/Hochfrequenz/bssclient.py).
