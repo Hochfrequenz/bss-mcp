@@ -77,3 +77,23 @@ async def test_get_ermittlungsauftraege_by_malo_propagates_error(
             await client.call_tool(
                 "get_ermittlungsauftraege_by_malo", {"malo_id": "DE0001234567890"}
             )
+
+
+async def test_get_aufgabe_stats_returns_stats(
+    bss_server: FastMCP, mock_bss_client: AsyncMock
+) -> None:
+    stats = build_aufgabe_stats()
+    mock_bss_client.get_aufgabe_stats.return_value = stats
+    async with Client(bss_server) as client:
+        result = await client.call_tool("get_aufgabe_stats", {})
+    assert result.data is not None
+    mock_bss_client.get_aufgabe_stats.assert_awaited_once_with()
+
+
+async def test_get_aufgabe_stats_propagates_error(
+    bss_server: FastMCP, mock_bss_client: AsyncMock
+) -> None:
+    mock_bss_client.get_aufgabe_stats.side_effect = Exception("stats unavailable")
+    async with Client(bss_server) as client:
+        with pytest.raises(ToolError, match="stats unavailable"):
+            await client.call_tool("get_aufgabe_stats", {})

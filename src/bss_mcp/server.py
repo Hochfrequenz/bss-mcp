@@ -20,7 +20,7 @@ def create_server(client: BssClient) -> FastMCP:
 
     @mcp.tool
     async def get_aufgabe_stats() -> AufgabeStats:
-        raise NotImplementedError
+        return await client.get_aufgabe_stats()
 
     @mcp.tool
     async def get_all_ermittlungsauftraege(package_size: int = 100) -> list[Ermittlungsauftrag]:
