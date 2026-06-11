@@ -22,6 +22,12 @@ An [MCP](https://modelcontextprotocol.io/) server wrapping [`bssclient`](https:/
 pip install bss-mcp
 ```
 
+For use with [Claude Desktop](https://claude.ai/download) or another MCP client, install into the same Python environment the client will use to launch the server, or use `pipx`:
+
+```bash
+pipx install bss-mcp
+```
+
 ## Configuration
 
 Set environment variables (or place them in a `.env` file):
