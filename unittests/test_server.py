@@ -49,10 +49,10 @@ async def test_get_ermittlungsauftraege_by_malo_returns_list(bss_server: FastMCP
     ea = build_ermittlungsauftrag()
     mock_bss_client.get_ermittlungsauftraege_by_malo.return_value = [ea]
     async with Client(bss_server) as client:
-        result = await client.call_tool("get_ermittlungsauftraege_by_malo", {"malo_id": "DE0001234567890"})
+        result = await client.call_tool("get_ermittlungsauftraege_by_malo", {"malo_id": "71945810408"})
     assert result.data is not None
     assert len(result.data) == 1
-    mock_bss_client.get_ermittlungsauftraege_by_malo.assert_awaited_once_with(malo_id="DE0001234567890")
+    mock_bss_client.get_ermittlungsauftraege_by_malo.assert_awaited_once_with(malo_id="71945810408")
 
 
 async def test_get_ermittlungsauftraege_by_malo_propagates_error(
@@ -61,7 +61,7 @@ async def test_get_ermittlungsauftraege_by_malo_propagates_error(
     mock_bss_client.get_ermittlungsauftraege_by_malo.side_effect = Exception("not found")
     async with Client(bss_server) as client:
         with pytest.raises(ToolError, match="not found"):
-            await client.call_tool("get_ermittlungsauftraege_by_malo", {"malo_id": "DE0001234567890"})
+            await client.call_tool("get_ermittlungsauftraege_by_malo", {"malo_id": "71945810408"})
 
 
 async def test_get_aufgabe_stats_returns_stats(bss_server: FastMCP, mock_bss_client: AsyncMock) -> None:
