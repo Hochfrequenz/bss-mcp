@@ -30,4 +30,9 @@ def create_server(client: BssClient) -> FastMCP:
 
 
 def main() -> None:
-    raise NotImplementedError
+    from bss_mcp.settings import BssMcpSettings
+
+    settings = BssMcpSettings()  # type: ignore[call-arg]  # env vars supply required fields
+    client = settings.create_client()
+    mcp = create_server(client)
+    mcp.run()
