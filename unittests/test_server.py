@@ -1,10 +1,10 @@
 """Tests for bss_mcp.server."""
-import pytest
 from unittest.mock import AsyncMock
+
+import pytest
 from fastmcp import Client, FastMCP
 from fastmcp.exceptions import ToolError
-from bssclient.client.bssclient import BssClient
-from bss_mcp.server import create_server
+
 from unittests.conftest import build_aufgabe_stats, build_ermittlungsauftrag
 
 

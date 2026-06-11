@@ -10,11 +10,15 @@ from bssclient.client.config import BasicAuthBssConfig, OAuthBssConfig
 
 
 class AuthType(StrEnum):
+    """Authentication type supported by the BSS server."""
+
     BASIC = "basic"
     OAUTH = "oauth"
 
 
 class BssMcpSettings(BaseSettings):
+    """Pydantic-settings model reading BSS_* environment variables."""
+
     model_config = SettingsConfigDict(env_prefix="BSS_", env_file=".env", extra="ignore")
 
     url: HttpUrl
@@ -26,6 +30,7 @@ class BssMcpSettings(BaseSettings):
     token_url: HttpUrl | None = None
 
     def create_client(self) -> BssClient:
+        """Instantiate the appropriate BssClient based on the configured auth type."""
         server_url = URL(str(self.url))
         if self.auth_type == AuthType.OAUTH:
             assert self.token_url is not None, "BSS_TOKEN_URL is required for OAuth"

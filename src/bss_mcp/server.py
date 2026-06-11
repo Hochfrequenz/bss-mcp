@@ -4,8 +4,11 @@ from bssclient.client.bssclient import BssClient
 from bssclient.models.aufgabe import AufgabeStats
 from bssclient.models.ermittlungsauftrag import Ermittlungsauftrag
 
+from bss_mcp.settings import BssMcpSettings
+
 
 def create_server(client: BssClient) -> FastMCP:
+    """Create and return a FastMCP server wired to the given BssClient."""
     mcp = FastMCP("bss-mcp")
 
     @mcp.tool
@@ -29,9 +32,8 @@ def create_server(client: BssClient) -> FastMCP:
     return mcp
 
 
-def main() -> None:
-    from bss_mcp.settings import BssMcpSettings
-
+def main() -> None:  # pragma: no cover
+    """Entry point: read env-var settings, build the client, and run the MCP server."""
     settings = BssMcpSettings()  # type: ignore[call-arg]  # env vars supply required fields
     client = settings.create_client()
     mcp = create_server(client)
