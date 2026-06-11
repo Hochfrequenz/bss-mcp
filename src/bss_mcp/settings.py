@@ -33,7 +33,8 @@ class BssMcpSettings(BaseSettings):
         """Instantiate the appropriate BssClient based on the configured auth type."""
         server_url = URL(str(self.url))
         if self.auth_type == AuthType.OAUTH:
-            assert self.token_url is not None, "BSS_TOKEN_URL is required for OAuth"
+            if self.token_url is None:
+                raise ValueError("BSS_TOKEN_URL is required when BSS_AUTH_TYPE=oauth")
             return OAuthBssClient(
                 OAuthBssConfig(
                     server_url=server_url,
