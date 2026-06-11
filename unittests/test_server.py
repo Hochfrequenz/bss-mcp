@@ -17,3 +17,36 @@ async def test_server_exposes_expected_tools(bss_server: FastMCP) -> None:
         "get_aufgabe_stats",
         "get_all_ermittlungsauftraege",
     }
+
+
+async def test_get_ermittlungsauftraege_returns_list(
+    bss_server: FastMCP, mock_bss_client: AsyncMock
+) -> None:
+    ea = build_ermittlungsauftrag()
+    mock_bss_client.get_ermittlungsauftraege.return_value = [ea]
+    async with Client(bss_server) as client:
+        result = await client.call_tool("get_ermittlungsauftraege", {})
+    assert result.data is not None
+    assert len(result.data) == 1
+    mock_bss_client.get_ermittlungsauftraege.assert_awaited_once_with(limit=0, offset=0)
+
+
+async def test_get_ermittlungsauftraege_forwards_limit_offset(
+    bss_server: FastMCP, mock_bss_client: AsyncMock
+) -> None:
+    mock_bss_client.get_ermittlungsauftraege.return_value = []
+    async with Client(bss_server) as client:
+        result = await client.call_tool(
+            "get_ermittlungsauftraege", {"limit": 10, "offset": 5}
+        )
+    assert result.data is not None
+    mock_bss_client.get_ermittlungsauftraege.assert_awaited_once_with(limit=10, offset=5)
+
+
+async def test_get_ermittlungsauftraege_propagates_error(
+    bss_server: FastMCP, mock_bss_client: AsyncMock
+) -> None:
+    mock_bss_client.get_ermittlungsauftraege.side_effect = Exception("BSS unavailable")
+    async with Client(bss_server) as client:
+        with pytest.raises(ToolError, match="BSS unavailable"):
+            await client.call_tool("get_ermittlungsauftraege", {})

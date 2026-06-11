@@ -12,7 +12,7 @@ def create_server(client: BssClient) -> FastMCP:
     async def get_ermittlungsauftraege(
         limit: int = 0, offset: int = 0
     ) -> list[Ermittlungsauftrag]:
-        raise NotImplementedError
+        return await client.get_ermittlungsauftraege(limit=limit, offset=offset)
 
     @mcp.tool
     async def get_ermittlungsauftraege_by_malo(malo_id: str) -> list[Ermittlungsauftrag]:
