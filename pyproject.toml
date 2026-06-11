@@ -1,39 +1,90 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling>=1.8.0"]
 build-backend = "hatchling.build"
 
 [project]
 name = "bss-mcp"
 version = "0.1.0"
 description = "MCP server for the Basic Supply Service (BSS) — read-only debug tools"
-requires-python = ">=3.12"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+authors = [{ name = "Hochfrequenz Unternehmensberatung GmbH", email = "info+pip@hochfrequenz.de" }]
+keywords = ["bss", "basicsupply", "mcp"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
 dependencies = [
     "bssclient>=0.1",
-    "fastmcp>=2.0",
+    "fastmcp>=3.0",
     "pydantic-settings>=2.7",
     "httpx>=0.27",
     "python-dotenv>=1.0",
 ]
 
 [project.optional-dependencies]
-dev = [
-    "pytest>=8",
-    "pytest-asyncio>=0.23",
+tests = [
+    "pytest>=9",
+    "pytest-asyncio>=0.24",
     "pytest-mock>=3",
+]
+linting = [
+    "pylint>=4",
+]
+type_check = [
     "mypy>=1.10",
-    "ruff>=0.4",
+]
+spell_check = [
+    "codespell>=2",
+]
+coverage = [
+    "coverage>=7",
+]
+formatting = [
+    "black>=25",
+    "isort>=5",
+]
+packaging = [
+    "build>=1",
+    "twine>=6",
+]
+dev = [
+    "pip-tools",
 ]
 
 [project.scripts]
 bss-mcp = "bss_mcp.server:main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/bss_mcp"]
+only-include = ["src"]
+sources = ["src"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["unittests"]
 
-[tool.ruff]
-target-version = "py312"
+[tool.black]
 line-length = 120
+target_version = ["py311", "py312", "py313", "py314"]
+
+[tool.isort]
+line_length = 120
+profile = "black"
+
+[tool.pylint."MESSAGES CONTROL"]
+max-line-length = 120
+
+[mypy]
+truethy-bool = true
+
+[tool.mypy]
+disable_error_code = []
