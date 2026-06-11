@@ -1,8 +1,9 @@
 """FastMCP server wrapping BssClient."""
-from fastmcp import FastMCP
+
 from bssclient.client.bssclient import BssClient
 from bssclient.models.aufgabe import AufgabeStats
 from bssclient.models.ermittlungsauftrag import Ermittlungsauftrag
+from fastmcp import FastMCP
 
 
 def create_server(client: BssClient) -> FastMCP:
@@ -10,9 +11,7 @@ def create_server(client: BssClient) -> FastMCP:
     mcp = FastMCP("bss-mcp")
 
     @mcp.tool
-    async def get_ermittlungsauftraege(
-        limit: int = 0, offset: int = 0
-    ) -> list[Ermittlungsauftrag]:
+    async def get_ermittlungsauftraege(limit: int = 0, offset: int = 0) -> list[Ermittlungsauftrag]:
         return await client.get_ermittlungsauftraege(limit=limit, offset=offset)
 
     @mcp.tool
@@ -32,9 +31,10 @@ def create_server(client: BssClient) -> FastMCP:
 
 def main() -> None:  # pragma: no cover
     """Entry point: read env-var settings, build the client, and run the MCP server."""
-    from bss_mcp.settings import BssMcpSettings  # deferred: keeps create_server importable without env vars
+    from bss_mcp.settings import BssMcpSettings  # pylint: disable=import-outside-toplevel
 
-    settings = BssMcpSettings()  # type: ignore[call-arg]  # pydantic-settings reads BSS_URL from env; mypy cannot see that
+    settings = BssMcpSettings()  # type: ignore[call-arg]  # pydantic-settings reads BSS_URL from env
+
     client = settings.create_client()
     mcp = create_server(client)
     mcp.run()

@@ -1,12 +1,12 @@
 """Env-var configuration for bss-mcp."""
-from enum import StrEnum
 
-from pydantic import HttpUrl
-from pydantic_settings import BaseSettings, SettingsConfigDict
-from yarl import URL
+from enum import StrEnum
 
 from bssclient.client.bssclient import BasicAuthBssClient, BssClient, OAuthBssClient
 from bssclient.client.config import BasicAuthBssConfig, OAuthBssConfig
+from pydantic import HttpUrl
+from pydantic_settings import BaseSettings, SettingsConfigDict
+from yarl import URL
 
 
 class AuthType(StrEnum):
@@ -43,6 +43,4 @@ class BssMcpSettings(BaseSettings):
                     token_url=self.token_url,
                 )
             )
-        return BasicAuthBssClient(
-            BasicAuthBssConfig(server_url=server_url, usr=self.user, pwd=self.password)
-        )
+        return BasicAuthBssClient(BasicAuthBssConfig(server_url=server_url, usr=self.user, pwd=self.password))
