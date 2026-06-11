@@ -33,3 +33,32 @@ async def get_aufgabe_stats() -> dict:
         return result.model_dump(mode="json")
     finally:
         await client.close_session()
+
+
+async def get_events_for_prozess(prozess_id: str) -> list[dict]:
+    """
+    Get event history for a BSS Prozess by UUID.
+    Returns EventHeaders in order. Gaps in sequence indicate deserialization issues — escalate to team.
+    Use after list_prozesse_for_malo to trace what happened to a stuck or failed process.
+    """
+    settings = BssMcpSettings()
+    client = get_bss_client(settings)
+    try:
+        results = await client.get_events("Prozess", _uuid.UUID(prozess_id))
+        return [r.model_dump(mode="json") for r in results]
+    finally:
+        await client.close_session()
+
+
+async def get_events_for_aufgabe(aufgabe_id: str) -> list[dict]:
+    """
+    Get event history for a BSS Aufgabe by UUID.
+    Returns EventHeaders in order. Use to trace the lifecycle of an Ermittlungsauftrag.
+    """
+    settings = BssMcpSettings()
+    client = get_bss_client(settings)
+    try:
+        results = await client.get_events("Aufgabe", _uuid.UUID(aufgabe_id))
+        return [r.model_dump(mode="json") for r in results]
+    finally:
+        await client.close_session()
