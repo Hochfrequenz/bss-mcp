@@ -97,3 +97,34 @@ async def test_get_aufgabe_stats_propagates_error(
     async with Client(bss_server) as client:
         with pytest.raises(ToolError, match="stats unavailable"):
             await client.call_tool("get_aufgabe_stats", {})
+
+
+async def test_get_all_ermittlungsauftraege_passes_package_size(
+    bss_server: FastMCP, mock_bss_client: AsyncMock
+) -> None:
+    mock_bss_client.get_all_ermittlungsauftraege.return_value = []
+    async with Client(bss_server) as client:
+        result = await client.call_tool(
+            "get_all_ermittlungsauftraege", {"package_size": 50}
+        )
+    assert result.data is not None
+    mock_bss_client.get_all_ermittlungsauftraege.assert_awaited_once_with(package_size=50)
+
+
+async def test_get_all_ermittlungsauftraege_default_package_size(
+    bss_server: FastMCP, mock_bss_client: AsyncMock
+) -> None:
+    mock_bss_client.get_all_ermittlungsauftraege.return_value = []
+    async with Client(bss_server) as client:
+        result = await client.call_tool("get_all_ermittlungsauftraege", {})
+    assert result.data is not None
+    mock_bss_client.get_all_ermittlungsauftraege.assert_awaited_once_with(package_size=100)
+
+
+async def test_get_all_ermittlungsauftraege_propagates_error(
+    bss_server: FastMCP, mock_bss_client: AsyncMock
+) -> None:
+    mock_bss_client.get_all_ermittlungsauftraege.side_effect = Exception("timeout")
+    async with Client(bss_server) as client:
+        with pytest.raises(ToolError, match="timeout"):
+            await client.call_tool("get_all_ermittlungsauftraege", {})
