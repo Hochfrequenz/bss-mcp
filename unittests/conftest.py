@@ -21,7 +21,7 @@ def bss_server(mock_bss_client: AsyncMock) -> FastMCP:
     return create_server(mock_bss_client)
 
 
-def build_prozess_dict() -> dict:
+def build_prozess_dict() -> dict[str, str | None]:
     return {
         "id": str(uuid4()),
         "status": "Offen",
