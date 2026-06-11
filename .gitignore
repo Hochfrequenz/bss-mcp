@@ -137,3 +137,4 @@ dmypy.json
 .worktrees/
 
 src/_your_package_version.py
+src/bss_mcp_version.py
