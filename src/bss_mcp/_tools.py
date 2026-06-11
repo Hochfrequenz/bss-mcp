@@ -62,3 +62,48 @@ async def get_events_for_aufgabe(aufgabe_id: str) -> list[dict]:
         return [r.model_dump(mode="json") for r in results]
     finally:
         await client.close_session()
+
+
+def _httpx_auth(settings: BssMcpSettings) -> tuple[str, str]:
+    """BasicAuth tuple for httpx. OAuth not yet supported for raw Prozess endpoints."""
+    if settings.auth_type.value == "basic":
+        if not settings.user or not settings.password:
+            raise ValueError("BSS_USER and BSS_PASSWORD required for basic auth")
+        return (settings.user, settings.password)
+    raise NotImplementedError(
+        "OAuth not yet supported for Prozess endpoints. Use BasicAuth or contribute OAuth support."
+    )
+
+
+async def list_prozesse_for_malo(malo_id: str) -> list[dict]:
+    """
+    List all Prozesse in BSS for a given MaLo-ID.
+    Returns current state of each process. Use to find stuck, unexpected, or missing processes.
+    NOTE: Endpoint path unverified — check Swagger before first use (no .env present during authoring).
+    """
+    settings = BssMcpSettings()
+    bss_url = str(settings.url).rstrip("/")
+    # VERIFY: path /api/Prozess/find is a best-guess approximation — check {BSS_URL}/swagger/index.html:
+    url = f"{bss_url}/api/Prozess/find"
+    params = {"marktlokationId": malo_id}
+    async with httpx.AsyncClient(auth=_httpx_auth(settings)) as client:
+        response = await client.get(url, params=params)
+        response.raise_for_status()
+        return response.json()
+
+
+async def get_prozess_by_id(prozess_id: str) -> dict:
+    """
+    Get a single Prozess from BSS by UUID.
+    Returns full process state: status, timestamps, MaLo/MeLo reference.
+    Use after list_prozesse_for_malo to inspect a specific process in detail.
+    NOTE: Endpoint path unverified — check Swagger before first use (no .env present during authoring).
+    """
+    settings = BssMcpSettings()
+    bss_url = str(settings.url).rstrip("/")
+    # VERIFY: path /api/Prozess/{id} is a best-guess approximation — check {BSS_URL}/swagger/index.html:
+    url = f"{bss_url}/api/Prozess/{prozess_id}"
+    async with httpx.AsyncClient(auth=_httpx_auth(settings)) as client:
+        response = await client.get(url)
+        response.raise_for_status()
+        return response.json()
