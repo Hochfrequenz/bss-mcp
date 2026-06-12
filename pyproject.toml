@@ -24,7 +24,7 @@ classifiers = [
     "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
-    "bssclient>=0.1",
+    "bssclient>=0.3.1",
     "fastmcp>=3.0",
     "pydantic-settings>=2.7",
     "httpx>=0.27",
