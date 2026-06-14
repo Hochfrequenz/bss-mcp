@@ -1,5 +1,7 @@
 """FastMCP server wrapping BssClient."""
 
+from pathlib import Path
+
 from bssclient.client.bssclient import BssClient
 from bssclient.models.aufgabe import AufgabeStats
 from bssclient.models.ermittlungsauftrag import Ermittlungsauftrag
@@ -25,6 +27,11 @@ def create_server(client: BssClient) -> FastMCP:
     @mcp.tool
     async def get_all_ermittlungsauftraege(package_size: int = 100) -> list[Ermittlungsauftrag]:
         return await client.get_all_ermittlungsauftraege(package_size=package_size)
+
+    @mcp.prompt
+    def bug_hunt_workflow() -> str:
+        """BSS bug hunt workflow — which tool to use when and in which order."""
+        return (Path(__file__).parent / "DEBUGGING.md").read_text(encoding="utf-8")
 
     return mcp
 
