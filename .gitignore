@@ -133,4 +133,8 @@ dmypy.json
 # vscode settings
 .vscode/
 
+# git worktrees
+.worktrees/
+
 src/_your_package_version.py
+src/bss_mcp_version.py
