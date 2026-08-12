@@ -90,6 +90,6 @@ PYTHONPATH=src uv run --group tests pytest                                      
 PYTHONPATH=src uv run --group type_check mypy --show-error-codes src/bss_mcp --strict # mypy --strict
 PYTHONPATH=src uv run --group linting pylint bss_mcp                                  # pylint
 PYTHONPATH=src uv run --group coverage coverage run -m pytest                         # coverage (≥ 80 %)
-uv run --group formatting black .                                                     # black + isort
-uv run --group formatting isort .
+uv run --group formatting black .                                                     # format with black
+uv run --group formatting isort .                                                     # sort imports with isort
 ```
