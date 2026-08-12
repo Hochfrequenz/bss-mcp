@@ -38,8 +38,7 @@ tests = [
     "pytest-mock>=3",
 ]
 linting = [
-    "pylint>=4",
-    {include-group = "tests"},
+    "ruff==0.16.2",
 ]
 type_check = [
     "mypy>=1.10",
@@ -52,17 +51,12 @@ coverage = [
     "coverage>=7",
     {include-group = "tests"},
 ]
-formatting = [
-    "black>=25",
-    "isort>=5",
-]
 dev = [
     {include-group = "tests"},
     {include-group = "linting"},
     {include-group = "type_check"},
     {include-group = "spell_check"},
     {include-group = "coverage"},
-    {include-group = "formatting"},
 ]
 
 [tool.uv]
@@ -92,16 +86,52 @@ sources = ["src"]
 asyncio_mode = "auto"
 testpaths = ["unittests"]
 
-[tool.black]
+[tool.ruff]
 line-length = 120
-target_version = ["py311", "py312", "py313", "py314"]
+extend-exclude = ["*.md"]
 
-[tool.isort]
-line_length = 120
-profile = "black"
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "N",   # pep8-naming
+    "PL",  # pylint
+    "RUF", # ruff-specific rules
+    "SIM", # flake8-simplify
+    "C4",  # flake8-comprehensions
+    "PTH", # flake8-use-pathlib
+    "PT",  # flake8-pytest-style
+    "RET", # flake8-return
+    "ARG", # flake8-unused-arguments
+    "TC",  # flake8-type-checking
+    "PIE", # flake8-pie
+    "RSE", # flake8-raise
+    "ISC", # flake8-implicit-str-concat
+    "S",   # flake8-bandit (this is an MCP server)
+]
+ignore = [
+    "PLR0913", # too-many-arguments
+    "PLR0917", # too-many-positional-arguments
+    "PLR0912", # too-many-branches
+    "PLR0915", # too-many-statements
+    "PLR2004", # magic-value-comparison
+    "ISC001",  # single-line-implicit-string-concatenation (conflicts with ruff format)
+]
 
-[tool.pylint."MESSAGES CONTROL"]
-max-line-length = 120
+[tool.ruff.lint.per-file-ignores]
+# Standing globs: tests may use assert and magic values freely.
+"unittests/**" = [
+    "S101",    # assert-used
+    "PLR2004", # magic-value-comparison
+]
+# Grandfathered pre-existing violations (generated; zero lint churn on existing code).
+"src/bss_mcp/server.py" = [
+    "PLC0415", # import-outside-top-level
+]
 
 [mypy]
 truethy-bool = true
