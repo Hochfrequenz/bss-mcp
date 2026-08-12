@@ -34,10 +34,13 @@ The server only exposes read-only `BssClient` methods. `replay_event` (mutates s
 
 ## CI
 
+Dev tooling uses [uv](https://docs.astral.sh/uv/). Install everything with `uv sync --group dev`.
+The `PYTHONPATH=src` prefix makes the `src` layout importable.
+
 ```
-tox -e tests       # pytest
-tox -e type_check  # mypy --strict
-tox -e linting     # pylint
-tox -e coverage    # coverage ≥ 80%
-tox -e formatting  # black + isort
+PYTHONPATH=src uv run --group tests pytest                                            # pytest
+PYTHONPATH=src uv run --group type_check mypy --show-error-codes src/bss_mcp --strict # mypy --strict
+PYTHONPATH=src uv run --group linting pylint bss_mcp                                  # pylint
+PYTHONPATH=src uv run --group coverage coverage run -m pytest                         # coverage ≥ 80%
+uv run --group formatting black . && uv run --group formatting isort .                # black + isort
 ```

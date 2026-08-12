@@ -31,7 +31,7 @@ dependencies = [
     "python-dotenv>=1.0",
 ]
 
-[project.optional-dependencies]
+[dependency-groups]
 tests = [
     "pytest>=9",
     "pytest-asyncio>=0.24",
@@ -39,27 +39,34 @@ tests = [
 ]
 linting = [
     "pylint>=4",
+    {include-group = "tests"},
 ]
 type_check = [
     "mypy>=1.10",
+    {include-group = "tests"},
 ]
 spell_check = [
     "codespell>=2",
 ]
 coverage = [
     "coverage>=7",
+    {include-group = "tests"},
 ]
 formatting = [
     "black>=25",
     "isort>=5",
 ]
-packaging = [
-    "build>=1",
-    "twine>=6",
-]
 dev = [
-    "pip-tools",
+    {include-group = "tests"},
+    {include-group = "linting"},
+    {include-group = "type_check"},
+    {include-group = "spell_check"},
+    {include-group = "coverage"},
+    {include-group = "formatting"},
 ]
+
+[tool.uv]
+default-groups = []
 
 [project.scripts]
 bss-mcp = "bss_mcp.server:main"
