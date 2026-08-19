@@ -8,6 +8,9 @@
 ![Linting status badge](https://github.com/Hochfrequenz/bss-mcp/workflows/Linting/badge.svg)
 ![Black status badge](https://github.com/Hochfrequenz/bss-mcp/workflows/Formatting/badge.svg)
 
+> [!WARNING]
+> This project is being discontinued in favor of a server-side MCP API.
+
 An [MCP](https://modelcontextprotocol.io/) server wrapping [`bssclient`](https://github.com/Hochfrequenz/bssclient.py), exposing read-only BSS investigation-order data to AI assistants (e.g. Claude Desktop) for debugging.
 
 Requires **Python 3.11+**.
